@@ -13,6 +13,12 @@
         <!-- Courses -->
         <table>
             <thead>
+                <tr>
+                    <td colspan="5">
+                        <button class="gradeOption selectedGrade">Letter</button>
+                        <button class="gradeOption">Percentage</button>
+                    </td>
+                </tr>
                 <tr><th></th><th>Course Type</th><th>Course Name</th><th>Grade</th><th>Credit</th></tr>
             </thead>
             <tbody class="courses" id="courses"></tbody>
@@ -30,11 +36,6 @@
                 <tr id="gpa"><td>0</td><td>0</td></tr>
             </tbody>
         </table>
-        <button id="calculate">Calculate GPA</button>
-        <p class="warn" id="warn">
-            All grades and credits must be entered. Grades can be written
-            as percentage or letters
-        </p>
 
         <!-- Conversion Table -->
         <table class="gradesKey">
@@ -81,6 +82,7 @@
         </table>
         <p class="warn" id="editGradeKeyWarn"></p>
         <u><span id="editGradeKey">Edit Grade's Key</span></u>
+        <u><span id="resetGradeKey" class="resetGradeKey">Reset Grade's Key to default</span></u>
         <br><br>
 
         <!-- FAQs -->
@@ -93,6 +95,38 @@
                 <u>Add Course</u> button. To remove a course, click on the
                 Ⓧ beside the course. If you do not know the credit of a
                 course, set it to 1.
+                <br><br>
+                Note that the course name does not affect the GPA.
+                <br><br>
+                You can also change the Grade's
+                Key by just tapping on the Edit Grade's Key button under
+                the Grade's Key. If there are no + and - in letter grades,
+                uncheck the + and - letters. Here are the rules of the
+                Garde's Key:
+                <ul>
+                    <li>
+                        A GPA of a higher grade letter cannot be greater
+                        than that of a lower grade letter.
+                    </li>
+                    <li>
+                        The percentage grade is divided so that it is
+                        minimum to maximum grade where minimum grade is
+                        inclusive and maximum grade is exclusive, except
+                        the first maximum grade.
+                    </li>
+                    <li>
+                        The maximum and minimum percentage of the same
+                        letter cannot equal to each other
+                    </li>
+                    <li>
+                        The maximum percentage of a letter must be greater
+                        than the minimum percentage of that same letter.
+                    </li>
+                    <li>
+                        The maximum percentage of a lower grade letter must
+                        equal to minimum percentage of the letter above it.
+                    </li>
+                </ul>
             </p>
             <!-- GPA -->
             <h1>What is GPA?</h1>

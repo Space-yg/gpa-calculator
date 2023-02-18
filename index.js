@@ -1,18 +1,19 @@
 function test() { console.log("Test"); }
 
+// Grade Options
+const gradeOption = [...document.getElementsByClassName("gradeOption")];
 // Course
 const coursesDiv = document.getElementById("courses");
 const addCourseButton = document.getElementById("addCourse");
 // GPA
 const gpa = document.getElementById("gpa");
-const calculate = document.getElementById("calculate");
-const warn = document.getElementById("warn");
 // Grade's Key
 const gradesKey = document.getElementById("gradesKey");
 // Edit Grade's Key
 const gradeKeyEditTbody = document.getElementById("gradeKeyEdit");
 const gradeKeyEditCheckBox = document.getElementById("gradeKeyEditCheckBox");
 const editGradeKey = document.getElementById("editGradeKey");
+const resetGradeKey = document.getElementById("resetGradeKey");
 const cancelGradeKeyEdit = document.getElementById("cancelGradeKeyEdit");
 const saveGradeKeyEdit = document.getElementById("saveGradeKeyEdit");
 const editGradeKeyWarn = document.getElementById("editGradeKeyWarn");
@@ -29,32 +30,32 @@ const letterToGPA_PM = {
 };
 const GPAToPercentage_PM = {
     "4": { max: 100, min: 93 },
-    "3.7": { max: 92, min: 90 },
-    "3.3": { max: 89, min: 87 },
-    "3": { max: 86, min: 83 },
-    "2.7": { max: 82, min: 80 },
-    "2.3": { max: 79, min: 77 },
-    "2": { max: 76, min: 73 },
-    "1.7": { max: 72, min: 70 },
-    "1.3": { max: 69, min: 67 },
-    "1": { max: 66, min: 63 },
-    "0.7": { max: 62, min: 60 },
-    "0": { max: 59, min: 0 }
+    "3.7": { max: 93, min: 90 },
+    "3.3": { max: 90, min: 87 },
+    "3": { max: 87, min: 83 },
+    "2.7": { max: 83, min: 80 },
+    "2.3": { max: 80, min: 77 },
+    "2": { max: 77, min: 73 },
+    "1.7": { max: 73, min: 70 },
+    "1.3": { max: 70, min: 67 },
+    "1": { max: 67, min: 63 },
+    "0.7": { max: 63, min: 60 },
+    "0": { max: 60, min: 0 }
 };
 const LetterToPercentage_PM = {
     "A+": { max: 100, min: 97 },
-    "A": { max: 96, min: 93 },
-    "A-": { max: 92, min: 90 },
-    "B+": { max: 89, min: 87 },
-    "B": { max: 86, min: 83 },
-    "B-": { max: 82, min: 80 },
-    "C+": { max: 79, min: 77 },
-    "C": { max: 76, min: 73 },
-    "C-": { max: 72, min: 70 },
-    "D+": { max: 69, min: 67 },
-    "D": { max: 66, min: 63 },
-    "D-": { max: 62, min: 60 },
-    "F": { max: 59, min: 0 }
+    "A": { max: 97, min: 93 },
+    "A-": { max: 93, min: 90 },
+    "B+": { max: 90, min: 87 },
+    "B": { max: 87, min: 83 },
+    "B-": { max: 83, min: 80 },
+    "C+": { max: 80, min: 77 },
+    "C": { max: 77, min: 73 },
+    "C-": { max: 73, min: 70 },
+    "D+": { max: 70, min: 67 },
+    "D": { max: 67, min: 63 },
+    "D-": { max: 63, min: 60 },
+    "F": { max: 60, min: 0 }
 };
 // No + and -
 const letterToGPA = {
@@ -66,18 +67,69 @@ const letterToGPA = {
 };
 const GPAToPercentage = {
     "4": { max: 100, min: 90 },
-    "3": { max: 89, min: 80 },
-    "2": { max: 79, min: 70 },
-    "1": { max: 69, min: 60 },
-    "0": { max: 59, min: 0 }
+    "3": { max: 90, min: 80 },
+    "2": { max: 80, min: 70 },
+    "1": { max: 70, min: 60 },
+    "0": { max: 60, min: 0 }
 };
 const LetterToPercentage = {
     "A": { max: 100, min: 90 },
-    "B": { max: 89, min: 80 },
-    "C": { max: 79, min: 70 },
-    "D": { max: 69, min: 60 },
-    "F": { max: 59, min: 0 }
+    "B": { max: 90, min: 80 },
+    "C": { max: 80, min: 70 },
+    "D": { max: 70, min: 60 },
+    "F": { max: 60, min: 0 }
 };
+
+/**
+ * Adds grade
+ * @returns Element that is grade
+ */
+function addGrade() {
+    if (document.getElementsByClassName("selectedGrade").item(0).innerHTML === "Letter") {
+        /**
+         * <select>
+         *     <option>A</option>
+         *     <option>B</option>
+         *     <option>C</option>
+         *     <option>D</option>
+         *     <option>F</option>
+         * </select>
+         */
+        const letters = (plusMinus) ? letterToGPA_PM : letterToGPA;
+        const select = document.createElement("select");
+        for (const letter in letters) {
+            const option = document.createElement("option");
+            option.innerHTML = letter;
+            select.appendChild(option);
+        }
+        select.addEventListener("change", calculateGPA);
+        return select;
+    } else {
+        // <input placeholder="Grade" type="number" min="0">
+        const input = document.createElement("input");
+        input.placeholder = "Grade";
+        input.type = "number";
+        input.min = "0";
+        input.addEventListener("change", calculateGPA);
+        return input;
+    }
+}
+
+/**
+ * Grade Option
+ * @param {PointerEvent} event 
+ */
+function changeGrade(event) {
+    if (event.target.classList.length === 1) {
+        // Changes grading system
+        gradeOption.forEach(grade => (grade.classList.length === 1) ? grade.classList.add("selectedGrade") : grade.classList.remove("selectedGrade"));
+        [...coursesDiv.children].forEach(tr => {
+            tr.children.item(3).innerHTML = "";
+            tr.children.item(3).appendChild(addGrade());
+        });
+    }
+}
+gradeOption.forEach(button => button.addEventListener("click", changeGrade));
 
 // Add Course
 const coursesTypes = ["Regular", "Honors", "AP", "IB", "College"];
@@ -86,7 +138,7 @@ function addCourse() {
     const tr = document.createElement("tr");
     tr.className = "course";
 
-    // <td><span>-</span></td>
+    // <td><span>Ⓧ</span></td>
     const td1 = document.createElement("td");
     const span = document.createElement("span");
     span.innerHTML = "Ⓧ";
@@ -112,6 +164,7 @@ function addCourse() {
         option.innerHTML = course;
         select.appendChild(option);
     });
+    select.addEventListener("change", calculateGPA);
     td2.appendChild(select);
     tr.appendChild(td2);
     
@@ -123,22 +176,19 @@ function addCourse() {
     td3.appendChild(input1);
     tr.appendChild(td3);
     
-    // <td><input type="text" maxlength="3" placeholder="Grade"></td>
+    // Adds Grade
     const td4 = document.createElement("td");
-    const input2 = document.createElement("input");
-    input2.type = "text";
-    input2.maxLength = "3";
-    input2.placeholder = "Grade";
-    td4.appendChild(input2);
+    td4.appendChild(addGrade());
     tr.appendChild(td4);
     
     // <td><input type="number" min="0" placeholder="Credits"></td>
     const td5 = document.createElement("td");
-    const input3 = document.createElement("input");
-    input3.type = "number";
-    input3.min = "0";
-    input3.placeholder = "Credits";
-    td5.appendChild(input3);
+    const input2 = document.createElement("input");
+    input2.type = "number";
+    input2.min = "0";
+    input2.placeholder = "Credits";
+    input2.addEventListener("change", calculateGPA);
+    td5.appendChild(input2);
     tr.appendChild(td5);
     
     coursesDiv.appendChild(tr);
@@ -147,44 +197,44 @@ addCourseButton.addEventListener("click", addCourse);
 addCourse();
 
 // Calculate GPA
-calculate.addEventListener("click", () => {
-    warn.style.display = "none";
+function calculateGPA() {
     const coursesTrs = [...document.getElementsByClassName("course")];
-    const letters = (plusMinus) ? ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"] : ["A", "B", "C", "D", "F"];
-    var credits = 0;
-    var gradeUnweighted = 0;
-    var gradeWeighted = 0;
+    let credits = 0;
+    let gradeUnweighted = 0;
+    let gradeWeighted = 0;
     // Get all courses
     coursesTrs.forEach(tr => {
         const tds = [...tr.children];
-        // Check if empty
-        if (tds[3].firstChild.value.length === 0 || tds[4].firstChild.value.length === 0) return warn.style.display = "block";
-        // Check if grade is an alphabet
-        if (letters.indexOf(tds[3].firstChild.value.toUpperCase()) >= 0) {
-            gradeUnweighted += letterToGPA_PM[tds[3].firstChild.value.toUpperCase()] * Number(tds[4].firstChild.value);
-            gradeWeighted += letterToGPA_PM[tds[3].firstChild.value.toUpperCase()] * Number(tds[4].firstChild.value) + ((tds[1].firstChild.value === "Regular" || letterToGPA_PM[tds[3].firstChild.value.toUpperCase()] === 0) ? 0 : (tds[1].firstChild.value === "Honors") ? 0.5 : 1);
-        }
-        // Check if grade is a number
-        else if (/^\d+$/.test(tds[3].firstChild.value)) {
-            for (const g in GPAToPercentage_PM) if (GPAToPercentage_PM[g].min <= Number(tds[3].firstChild.value) && Number(tds[3].firstChild.value) <= GPAToPercentage_PM[g].max) {
-                gradeUnweighted += Number(g) * Number(tds[4].firstChild.value);
-                gradeWeighted += Number(g) * Number(tds[4].firstChild.value) + ((tds[1].firstChild.value === "Regular" || Number(g) === 0) ? 0 : (tds[1].firstChild.value === "Honors") ? 0.5 : 1);
-                break;
+        if (document.getElementsByClassName("selectedGrade").item(0).innerHTML === "Letter") {
+            const LToGPA = (plusMinus) ? letterToGPA_PM : letterToGPA;
+            gradeUnweighted += LToGPA[tds[3].firstChild.value] * Number(tds[4].firstChild.value);
+            gradeWeighted += Number(tds[4].firstChild.value) * ((tds[1].firstChild.value === "Regular") ? 0 : (tds[1].firstChild.value === "Honors") ? 0.5 : 1);
+        } else {
+            // Check if empty
+            if (tds[3].firstChild.value.length === 0 || tds[4].firstChild.value.length === 0) return;
+            // Check if grade is a number
+            else if (/^(\d*\.\d+|\d+)$/gm.test(tds[3].firstChild.value)) {
+                for (const g in GPAToPercentage_PM) if (GPAToPercentage_PM[g].min <= Number(tds[3].firstChild.value) && Number(tds[3].firstChild.value) < GPAToPercentage_PM[g].max) {
+                    gradeUnweighted += Number(g) * Number(tds[4].firstChild.value);
+                    gradeWeighted += Number(tds[4].firstChild.value) * ((tds[1].firstChild.value === "Regular" || Number(g) === 0) ? 0 : (tds[1].firstChild.value === "Honors") ? 0.5 : 1);
+                    break;
+                }
             }
-        } else return warn.style.display = "block";
+        }
         credits += Number(tds[4].firstChild.value);
     });
+    gradeWeighted += gradeUnweighted;
     if (credits !== 0) {
         gpa.firstChild.innerHTML = Math.round(gradeUnweighted / credits * 100) / 100;
         gpa.lastChild.innerHTML = Math.round(gradeWeighted / credits * 100) / 100;
     }
-});
+}
 
 // Set the grade to the Grade's Key
 function setGradesKey() {
     gradesKey.innerHTML = "";
-    var LToGPA = {};
-    var LToP = {};
+    let LToGPA;
+    let LToP;
     if (plusMinus) {
         LToGPA = letterToGPA_PM;
         LToP = LetterToPercentage_PM;
@@ -194,15 +244,19 @@ function setGradesKey() {
     }
     for (const letter in LToGPA) {
         const tr = document.createElement("tr");
+        // Letter Grade
         const td1 = document.createElement("td");
         td1.innerHTML = letter;
         tr.appendChild(td1);
+        // GPA
         const td2 = document.createElement("td");
         td2.innerHTML = LToGPA[letter];
         tr.appendChild(td2);
+        // Percentage Grade
         const td3 = document.createElement("td");
         td3.innerHTML = `${LToP[letter].min}-${LToP[letter].max}`;
         tr.appendChild(td3);
+
         gradesKey.appendChild(tr);
     }
 }
@@ -276,22 +330,108 @@ gradeKeyEditCheckBox.addEventListener("change", plusMinusLetters);
 plusMinusLetters();
 
 // Edit Grade's Key button
-editGradeKey.addEventListener("click", () => document.getElementsByClassName("gradeKeyEdit").item(0).style.display = "table");
+editGradeKey.addEventListener("click", () => {
+    document.getElementsByClassName("gradeKeyEdit").item(0).style.display = "table";
+    // Make Edit Grade's Key button invisible
+    editGradeKey.parentElement.style.display = "none";
+    // Make Reset Grade's Key to default button visible
+    resetGradeKey.style.display = "block";
+});
+
+// Resets Grade's Key values
+function resetGradesKey() {
+    // + and -
+    for (const letter in letterToGPA_PM) {
+        letterToGPA_PM[letter] = {
+            "A+": 4, "A": 4, "A-": 3.7,
+            "B+": 3.3, "B": 3, "B-": 2.7,
+            "C+": 2.3, "C": 2, "C-": 1.7,
+            "D+": 1.3, "D": 1, "D-": 0.7,
+            "F": 0
+        }[letter];
+        LetterToPercentage_PM[letter] = {
+            "A+": { max: 100, min: 97 },
+            "A": { max: 97, min: 93 },
+            "A-": { max: 93, min: 90 },
+            "B+": { max: 90, min: 87 },
+            "B": { max: 87, min: 83 },
+            "B-": { max: 83, min: 80 },
+            "C+": { max: 80, min: 77 },
+            "C": { max: 77, min: 73 },
+            "C-": { max: 73, min: 70 },
+            "D+": { max: 70, min: 67 },
+            "D": { max: 67, min: 63 },
+            "D-": { max: 63, min: 60 },
+            "F": { max: 60, min: 0 }
+        }[letter];
+    }
+    Object.assign(GPAToPercentage_PM, {});
+    for (const GPA of ["4", "3.7", "3.3", "3", "2.7", "2.3", "2", "1.7", "1.3", "1", "0.7", "0"]) {
+        GPAToPercentage_PM[GPA] = {
+            "4": { max: 100, min: 93 },
+            "3.7": { max: 93, min: 90 },
+            "3.3": { max: 90, min: 87 },
+            "3": { max: 87, min: 83 },
+            "2.7": { max: 83, min: 80 },
+            "2.3": { max: 80, min: 77 },
+            "2": { max: 77, min: 73 },
+            "1.7": { max: 73, min: 70 },
+            "1.3": { max: 70, min: 67 },
+            "1": { max: 67, min: 63 },
+            "0.7": { max: 63, min: 60 },
+            "0": { max: 60, min: 0 }
+        }[GPA];
+    }
+    // No + and -
+    for (const letter in letterToGPA) {
+        letterToGPA[letter] = {
+            "A": 4,
+            "B": 3,
+            "C": 2,
+            "D": 1,
+            "F": 0
+        }[letter];
+        LetterToPercentage[letter] = {
+            "A": { max: 100, min: 90 },
+            "B": { max: 90, min: 80 },
+            "C": { max: 80, min: 70 },
+            "D": { max: 70, min: 60 },
+            "F": { max: 60, min: 0 }
+        }[letter];
+    }
+    Object.assign(GPAToPercentage, {});
+    for (const GPA of ["4", "3", "2", "1", "0"]) {
+        GPAToPercentage[GPA] = {
+            "4": { max: 100, min: 90 },
+            "3": { max: 90, min: 80 },
+            "2": { max: 80, min: 70 },
+            "1": { max: 70, min: 60 },
+            "0": { max: 60, min: 0 }
+        }[GPA];
+    }
+    setGradesKey();
+    plusMinusLetters();
+}
+resetGradeKey.addEventListener("click", resetGradesKey);
 
 // Cancel Grade's Key Edit button
 cancelGradeKeyEdit.addEventListener("click", () => {
     document.getElementsByClassName("gradeKeyEdit").item(0).style.display = "none";
     editGradeKeyWarn.style.display = "none";
     gradeKeyEditCheckBox.checked = plusMinus;
+    // Make Edit Grade's Key button visible
+    editGradeKey.parentElement.style.display = ""
+    // Make Reset Grade's Key to default button invisible
+    resetGradeKey.style.display = "none";
     plusMinusLetters();
 });
 
 // Save Grade's Key Edit button
 saveGradeKeyEdit.addEventListener("click", () => {
-    var previousLetter;
-    var previousGPA;
-    var previousMin;
-    var stop = false;
+    let previousLetter;
+    let previousGPA;
+    let previousMin;
+    let stop = false;
     const LToGPA = {};
     const GPAToP = {};
     const LToP = {};
@@ -302,21 +442,21 @@ saveGradeKeyEdit.addEventListener("click", () => {
         const tds = [...tr.children];
         if (!i) {
             previousGPA = Number(tds[1].firstChild.value);
-            previousMin = parseInt(tds[2].lastChild.value) + 1;
+            previousMin = parseInt(tds[2].lastChild.value);
             previousLetter = tds[0].innerHTML;
         }
         if (Number(tds[1].firstChild.value) > previousGPA) {
             // GPA at {letter} (GPA) is greater than {letter} (GPA)
             return editGradeKeyWarn.innerHTML = `GPA at ${tds[0].innerHTML} (${tds[1].firstChild.value}) is greater than ${previousLetter} (${previousGPA})`;
-        } else if (parseInt(tds[2].lastChild.value) >= previousMin) {
-            // Percentage max at {letter} (percent) is greater than or equal to percentage min at {letter} (percent)
-            return editGradeKeyWarn.innerHTML = `Percentage max at ${tds[0].innerHTML} (${tds[2].lastChild.value}) is greater than or equal to percentage min at ${previousLetter} (${previousMin})`;
-        } else if (parseInt(tds[2].lastChild.value) + 1 !== previousMin) {
-            // Percentage max at {letter} (percent) is not less than percentage min at {letter} (percent) by 1
-            return editGradeKeyWarn.innerHTML = `Percentage max at ${tds[0].innerHTML} (${tds[2].lastChild.value}) is not less than percentage min at ${previousLetter} (${previousMin}) by 1`;
+        } else if (parseInt(tds[2].lastChild.value) > previousMin) {
+            // Maximum percentage at {letter} (percent) is greater than minimum percentage at {letter} (percent)
+            return editGradeKeyWarn.innerHTML = `Maximum percentage at ${tds[0].innerHTML} (${tds[2].lastChild.value}) is greater than minimum percentage at ${previousLetter} (${previousMin})`;
+        } else if (parseInt(tds[2].lastChild.value) !== previousMin) {
+            // Maximum percentage at {letter} (percent) is not equal to minimum percentage at {letter} (percent)
+            return editGradeKeyWarn.innerHTML = `Maximum percentage at ${tds[0].innerHTML} (${tds[2].lastChild.value}) is equal to minimum percentage at ${previousLetter} (${previousMin})`;
         } else if (parseInt(tds[2].firstChild.value) >= parseInt(tds[2].lastChild.value)) {
-            // At {letter}, percentage min (percent) is greater than or equal to percentage max (percent)
-            return editGradeKeyWarn.innerHTML = `At ${tds[0].innerHTML}, percentage min (${tds[2].firstChild.value}) is greater than or equal to percentage max (${tds[2].lastChild.value})`;
+            // At {letter}, minimum percentage (percent) is greater than or equal to maximum percentage (percent)
+            return editGradeKeyWarn.innerHTML = `At ${tds[0].innerHTML}, minimum percentage (${tds[2].firstChild.value}) is greater than or equal to maximum percentage (${tds[2].lastChild.value})`;
         } else {
             stop = false;
             previousGPA = Number(tds[1].firstChild.value);
@@ -344,6 +484,16 @@ saveGradeKeyEdit.addEventListener("click", () => {
         Object.assign(LetterToPercentage, LToP);
     }
     plusMinus = gradeKeyEditCheckBox.checked;
-    // Set all grades to the Grade's Key table
+    // Make Edit Grade's Key button visible
+    editGradeKey.parentElement.style.display = "";
+    // Set all grades to the Grade's Key table// Make Reset Grade's Key to default button invisible
+    resetGradeKey.style.display = "none";
     setGradesKey();
+    // Changes grade status
+    if (document.getElementsByClassName("selectedGrade").item(0).innerHTML === "Letter") {
+        [...coursesDiv.children].forEach(tr => {
+            tr.children.item(3).innerHTML = "";
+            tr.children.item(3).appendChild(addGrade());
+        });
+    }
 });

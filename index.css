@@ -1,15 +1,34 @@
-/* Origination */
+/** Origination **/
 body, table {
     /* Font */
     text-align: center;
     font-size: 16px;
-    font-family: "Arial Rounded MT", "Helvetica Neue", Helvetica, sans-serif;
+    font-family: "Arial Rounded MT", Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 body {
     /* Color */
     background-color: rgb(217, 236, 246);
 }
-
+/** span **/
+span:hover {
+    /* Color */
+    color: blue;
+    /* Cursor */
+    cursor: pointer;
+}
+a:hover {
+    /* Font */
+    text-decoration: underline;
+}
+/* footer */
+footer, footer a {
+    /* Position */
+    margin: 20px 0;
+    /* Color */
+    color: gray;
+    /* Font */
+    text-decoration: none;
+}
 /* inputs */
 input, select, button {
     /* Position */
@@ -17,21 +36,10 @@ input, select, button {
     border: 1px black solid;
     border-radius: 6px;
     /* Color */
+    color: black;
     background-color: white;
 }
-
-/* Cool */
-.cool {
-    position: fixed;
-    height: 4px;
-    width: 100%;
-    background-color: blueviolet;
-    background-image: linear-gradient(to right, blue, blueviolet);
-    left: 0;
-    top: 0;
-}
-
-/* Table */
+/** Table **/
 table {
     /* Position */
     margin: 10px auto;
@@ -41,27 +49,55 @@ table {
     /* Color */
     background-color: white;
 }
-td {
-    padding: 5px;
-}
-
-/** Courses **/
 th {
     /* Position */
     padding: 10px;
     border-bottom: solid gray 1px;
 }
+td {
+    /* Position */
+    padding: 5px;
+}
+
+/* Cool */
+.cool {
+    /* Position */
+    position: fixed;
+    height: 4px;
+    width: 100%;
+    left: 0;
+    top: 0;
+    /* Color */
+    background-color: blueviolet;
+    background-image: linear-gradient(to right, blue, blueviolet);
+}
+
+/** Courses **/
 /* td */
 tbody.courses td {
     /* Position */
     padding: 10px 20px;
 }
-/* Span */
-span:hover {
+/* Garde Option */
+button.gradeOption {
+    /* Position */
+    margin: 0 -2.5px;
+    border-radius: 0;
+    width: 80px;
+}
+button.gradeOption:hover {
     /* Color */
-    color: blue;
+    background-color: rgb(180, 180, 180);
     /* Cursor */
     cursor: pointer;
+}
+button.gradeOption:first-child { border-radius: 10px 0 0 10px;}
+button.gradeOption:last-child { border-radius: 0 10px 10px 0;}
+button.selectedGrade {
+    /* Position */
+    border-bottom: 3px solid black;
+    /* Color */
+    background-color: lightgray;
 }
 
 /* Warn */
@@ -75,7 +111,8 @@ span:hover {
 
 /** Edit Grade's Key **/
 /* Table */
-table.gradeKeyEdit {
+table.gradeKeyEdit, span.resetGradeKey {
+    /* Position */
     display: none;
 }
 
@@ -98,23 +135,26 @@ div.FAQ {
 div.FAQ h1 {
     /* Font */
     text-decoration: underline;
+    font-size: 32px;
 }
 div.FAQ a {
+    /* Color */
     color: black;
 }
 div.FAQ a:hover {
+    /* Color */
     color: blue;
 }
-
-footer, footer a {
-    /* Position */
-    margin: 20px 0;
-    /* Color */
-    color: gray;
+div.FAQ p {
     /* Font */
-    text-decoration: none;
+    font-size: 16px;
 }
-a:hover {
-    /* Font */
-    text-decoration: underline;
+
+/* Add setting for mobile */
+/** Mobile **/
+@media (pointer:none), (pointer:coarse) {
+    /** Organization **/
+    body {
+        font-size: 24px;
+    }
 }
